@@ -47,66 +47,31 @@ let baseMaps = {
     Satellite: satellite
 };
 
+// Create the earthquake layer for our map.
+let earthquakes = new L.layerGroup();
+
 // Create the map object with center, zoom level and default layer.
 let map = L.map('mapid', {
     center: [30, 30],
     zoom: 2,
-    layers: [streets]
+    layers: [streets, earthquakes]
 })
 
 // Pass our map layers into our layers control and add the layers control to the map.
-L.control.layers(baseMaps).addTo(map);
-
-// Then we add our 'graymap' tile layer to the map.
-// dark.addTo(map);
-
-// //  Add a marker to the map for Los Angeles, California.
-// let marker = L.circleMarker([34.0522, -118.2437]).addTo(map);
-
-// Add GeoJSON data.
-// let sanFranAirport =
-// {
-//     "type": "FeatureCollection", "features": [{
-//         "type": "Feature",
-//         "properties": {
-//             "id": "3469",
-//             "name": "San Francisco International Airport",
-//             "city": "San Francisco",
-//             "country": "United States",
-//             "faa": "SFO",
-//             "icao": "KSFO",
-//             "alt": "13",
-//             "tz-offset": "-8",
-//             "dst": "A",
-//             "tz": "America/Los_Angeles"
-//         },
-//         "geometry": {
-//             "type": "Point",
-//             "coordinates": [-122.375, 37.61899948120117]
-//         }
-//     }
-//     ]
-// };
-// pointtolayer example
-
-// L.geoJson(data, {
-//     pointToLayer: function(feature, latlng) {
-//       return L.marker(latlng);
-//      }
-// });
+// L.control.layers(baseMaps).addTo(map);
 
 
-// Grabbing our GeoJSON data.
-// L.geoJSON(sanFranAirport, {
-//     pointToLayer: function (feature, latlng) {
-//         return L.circleMarker(latlng);
-//     }
-// }).addTo(map);
-// L.geoJSON(sanFranAirport, {
-//     onEachFeature: function (feature, layer) {
-//         layer.bindPopup("<h2>" + feature.properties.city + "</h2>" + "<br>" + feature.properties.faa);
-//     }
-// }).addTo(map);
+
+
+// We define an object that contains the overlays.
+// This overlay will be visible all the time.
+let overlays = {
+    Earthquakes: earthquakes
+  };
+
+  // Then we add a control to the map that will allow the user to change
+// which layers are visible.
+L.control.layers(baseMaps, overlays).addTo(map);
 
 // link to earthquake geoJSON URL from USGS site
 
@@ -178,7 +143,7 @@ d3.json(earthquakeData).then(function (data) {
         onEachFeature: function (feature, layer) {
             layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
         }
-    }).addTo(map);
+    }).addTo(earthquakes);
 
     // no data beyond this point
 
