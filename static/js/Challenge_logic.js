@@ -43,8 +43,8 @@ let satellite = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}
 // Create a base layer that holds both maps.
 let baseMaps = {
     Street: streets,
-    Dark: dark,
-    Satellite: satellite
+    Satellite: satellite,
+    Dark: dark
 };
 
 // Create the earthquake layer for our map.
