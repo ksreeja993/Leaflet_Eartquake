@@ -30,11 +30,21 @@ let dark = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{
     accessToken: API_KEY
 });
 
+let satellite = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/satellite-v9',
+    // tileSize: 512,
+    // zoomOffset: -1,
+    accessToken: API_KEY
+});
+
 
 // Create a base layer that holds both maps.
 let baseMaps = {
     Street: streets,
-    Dark: dark
+    Dark: dark,
+    Satellite: satellite
 };
 
 // Create the map object with center, zoom level and default layer.
@@ -111,9 +121,9 @@ d3.json(earthquakeData).then(function (data) {
         return {
             opacity: 1,
             fillOpacity: 1,
-            fillColor: "#ffae42",
+            fillColor: getColor(feature.properties.mag),
             color: "#000000",
-            radius: getRadius(),
+            radius: getRadius(feature.properties.mag),
             stroke: true,
             weight: 0.5
         };
@@ -121,6 +131,26 @@ d3.json(earthquakeData).then(function (data) {
 
     // This function determines the radius of the earthquake marker based on its magnitude.
     // Earthquakes with a magnitude of 0 will be plotted with a radius of 1.
+
+    // This function determines the color of the circle based on the magnitude of the earthquake.
+    function getColor(magnitude) {
+        if (magnitude > 5) {
+            return "#ea2c2c";
+        }
+        if (magnitude > 4) {
+            return "#ea822c";
+        }
+        if (magnitude > 3) {
+            return "#ee9c00";
+        }
+        if (magnitude > 2) {
+            return "#eecc00";
+        }
+        if (magnitude > 1) {
+            return "#d4ee00";
+        }
+        return "#98ee00";
+    }
     function getRadius(magnitude) {
         if (magnitude === 0) {
             return 1;
