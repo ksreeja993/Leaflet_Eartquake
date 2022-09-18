@@ -60,13 +60,15 @@ let map = L.map('mapid', {
 // Pass our map layers into our layers control and add the layers control to the map.
 // L.control.layers(baseMaps).addTo(map);
 
-
+// 1. Add a 2nd layer group for the tectonic plate data.
+let tectonicPlates = new L.layerGroup();
 
 
 // We define an object that contains the overlays.
 // This overlay will be visible all the time.
 let overlays = {
-    Earthquakes: earthquakes
+    Earthquakes: earthquakes,
+    "Tectonic Plates": tectonicPlates
 };
 
 // Then we add a control to the map that will allow the user to change
@@ -179,6 +181,24 @@ d3.json(earthquakeData).then(function (data) {
 
     legend.addTo(map);
 
+    // link to tectonic boundaries
+
+    //https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json
+    d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json").then(function(tectonicData) {
+        console.log(tectonicData);
+
+// pass data to geoJSON() layer
+    L.geoJSON(tectonicData, {
+        color: "orange",
+        weight: 2.5,
+
+    }).addTo(tectonicPlates);
+
+    // add tectonic layer group to the map
+
+    tectonicPlates.addTo(map);
+
+    });
 
     // no data beyond this point
 
